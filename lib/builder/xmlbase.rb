@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'builder/blankslate'
-
 module Builder
 
   # Generic error for builder
@@ -9,7 +7,7 @@ module Builder
 
   # XmlBase is a base class for building XML builders.  See
   # Builder::XmlMarkup and Builder::XmlEvents for examples.
-  class XmlBase < BlankSlate
+  class XmlBase < BasicObject
 
     # Create an XML markup builder.
     #
@@ -23,7 +21,7 @@ module Builder
       @indent = indent
       @level  = initial
     end
-    
+
     # Create a tag named +sym+.  Other than the first argument which
     # is the tag name, the arguements are the same as the tags
     # implemented via <tt>method_missing</tt>.
@@ -37,10 +35,10 @@ module Builder
     def method_missing(sym, *args, &block)
       text = nil
       attrs = nil
-      sym = "#{sym}:#{args.shift}" if args.first.kind_of?(Symbol)
+      sym = "#{sym}:#{args.shift}" if args.first.kind_of?(::Symbol)
       args.each do |arg|
         case arg
-        when Hash
+        when ::Hash
           attrs ||= {}
           attrs.merge!(arg)
         else
@@ -50,7 +48,7 @@ module Builder
       end
       if block
         unless text.nil?
-          raise ArgumentError, "XmlMarkup cannot mix a text argument with a block"
+          ::Kernel.raise ::ArgumentError, "XmlMarkup cannot mix a text argument with a block"
         end
         _indent
         _start_tag(sym, attrs)
@@ -80,7 +78,7 @@ module Builder
     def text!(text)
       _text(_escape(text))
     end
-    
+
     # Append text to the output target without escaping any markup.
     # May be used within the markup brakets as:
     #
@@ -97,7 +95,7 @@ module Builder
     def <<(text)
       _text(text)
     end
-    
+
     # For some reason, nil? is sent to the XmlMarkup object.  If nil?
     # is not defined and method_missing is invoked, some strange kind
     # of recursion happens.  Since nil? won't ever be an XML tag, it
@@ -109,7 +107,7 @@ module Builder
     end
 
     private
-    
+
     require 'builder/xchar'
     def _escape(text)
       text.to_xs
@@ -123,12 +121,12 @@ module Builder
       return if @indent == 0
       text! "\n"
     end
-    
+
     def _indent
       return if @indent == 0 || @level == 0
       text!(" " * (@level * @indent))
     end
-    
+
     def _nested_structures(block)
       @level += 1
       block.call(self)

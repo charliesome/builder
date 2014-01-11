@@ -17,9 +17,6 @@
 # Provide a flexible and easy to use Builder for creating Cascading
 # Style Sheets (CSS).
 
-
-require 'builder/blankslate'
-
 module Builder
 
   # Create a Cascading Style Sheet (CSS) using Ruby.
@@ -89,8 +86,8 @@ module Builder
   #     background:       red;
   #   }
   #
-  class CSS < BlankSlate
-    
+  class CSS < BasicObject
+
     # Create a CSS builder.
     #
     # out::     Object receiving the markup.1  +out+ must respond to
@@ -136,14 +133,14 @@ module Builder
     end
 
     def id!(arg, &block)
-      _start_container('#'+arg.to_s, nil, block_given?)
+      _start_container('#'+arg.to_s, nil, ::Kernel.block_given?)
       _css_block(block) if block
       _unify_block
       self
     end
 
     def class!(arg, &block)
-      _start_container('.'+arg.to_s, nil, block_given?)
+      _start_container('.'+arg.to_s, nil, ::Kernel.block_given?)
       _css_block(block) if block
       _unify_block
       self
@@ -155,7 +152,7 @@ module Builder
 
     def group!(*args, &block)
       args.each do |arg|
-        if arg.is_a?(Symbol)
+        if arg.is_a?(::Symbol)
           instance_eval(&@library[arg])
         else
           instance_eval(&arg)
@@ -169,7 +166,7 @@ module Builder
     end
 
     def method_missing(sym, *args, &block)
-      sym = "#{sym}:#{args.shift}" if args.first.kind_of?(Symbol)
+      sym = "#{sym}:#{args.shift}" if args.first.kind_of?(::Symbol)
       if block
         _start_container(sym, args.first)
         _css_block(block)
@@ -196,12 +193,12 @@ module Builder
       @target << @parts * ''
       @parts = []
     end
-    
+
     def _join_with_op!(op)
       rhs, lhs = @target.pop, @target.pop
       @target << "#{lhs} #{op} #{rhs}"
     end
-    
+
     def _text(text)
       @parts << text
     end
@@ -217,11 +214,11 @@ module Builder
       _newline
       _newline
     end
-    
+
     def _newline
       _text "\n"
     end
-    
+
     def _indent
       _text ' ' * @indent
     end
