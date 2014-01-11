@@ -11,7 +11,7 @@ class TestCSS < MiniTest::Test
   end
 
   def test_create
-    assert_not_nil @css
+    refute_predicate @css, :nil?
   end
 
   def test_no_block

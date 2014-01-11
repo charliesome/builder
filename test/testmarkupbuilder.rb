@@ -21,7 +21,7 @@ class TestMarkup < MiniTest::Test
   end
 
   def test_create
-    assert_not_nil @xml
+    refute_predicate @xml, :nil?
   end
 
   def test_simple
