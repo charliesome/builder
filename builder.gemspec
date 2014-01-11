@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'builder'
-  s.version = "2.1.2.ruby21.0"
+  s.version = "2.1.2.ruby21.#{`git rev-parse HEAD`[0, 7]}"
   s.license = "MIT"
   s.summary = "Builders for MarkUp."
   s.description = %{\
