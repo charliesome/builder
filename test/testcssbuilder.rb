@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'test/preload'
 require 'builder'
 require 'builder/css'
 
-class TestCSS < Test::Unit::TestCase
+class TestCSS < MiniTest::Test
   def setup
     @css = Builder::CSS.new
   end
@@ -25,7 +25,7 @@ class TestCSS < Test::Unit::TestCase
     }
     assert_equal "body {\n  color: green;\n}\n\n", @css.target!
   end
-    
+
   def test_id
     @css.id!('nav') { color 'green' }
     assert_equal "#nav {\n  color: green;\n}\n\n", @css.target!

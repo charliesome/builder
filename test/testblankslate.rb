@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'test/preload'
 require 'builder/blankslate'
 require 'stringio'
@@ -48,7 +48,7 @@ end
 
 # Introduce some late methods (both module and direct) into the Object
 # class.
-class Object 
+class Object
   include LateObject
   def another_late_addition
     4321
@@ -70,7 +70,7 @@ end
 ######################################################################
 # Test case for blank slate.
 #
-class TestBlankSlate < Test::Unit::TestCase
+class TestBlankSlate < MiniTest::Test
   def setup
     @bs = BlankSlate.new
   end
@@ -97,23 +97,23 @@ class TestBlankSlate < Test::Unit::TestCase
       @bs.puts "HI"
     end
   end
-  
+
   def test_targetted_private_methods_are_undefined_during_instance_eval
     assert_raise(NoMethodError, NameError) do
       @bs.instance_eval do self.puts "HI" end
     end
   end
-  
+
   def test_untargetted_private_methods_are_defined_during_instance_eval
     oldstdout = $stdout
     $stdout = StringIO.new
-    @bs.instance_eval do 
+    @bs.instance_eval do
       puts "HI"
     end
   ensure
     $stdout = oldstdout
   end
-  
+
   def test_methods_added_late_to_kernel_remain_undefined
     assert_equal 1234, nil.late_addition
     assert_raise(NoMethodError) { @bs.late_addition }
@@ -123,7 +123,7 @@ class TestBlankSlate < Test::Unit::TestCase
     assert_equal 4321, nil.another_late_addition
     assert_raise(NoMethodError) { @bs.another_late_addition }
   end
-  
+
   def test_methods_added_late_to_global_remain_undefined
     assert_equal 42, global_inclusion
     assert_raise(NoMethodError) { @bs.global_inclusion }

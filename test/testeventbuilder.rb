@@ -1,4 +1,6 @@
-class TestEvents < Test::Unit::TestCase
+require "minitest/autorun"
+
+class TestEvents < MiniTest::Test
 
   class Target
     attr_reader :events
@@ -14,11 +16,11 @@ class TestEvents < Test::Unit::TestCase
     def end_tag(tag)
       @events << [:end_tag, tag]
     end
-    
+
     def text(string)
       @events << [:text, string]
     end
-    
+
   end
 
 

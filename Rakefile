@@ -7,6 +7,8 @@
 # and distribution of modified versions of this work as long as the
 # above copyright notice is included.
 
+gem "minitest"
+
 require 'rake/clean'
 require 'rake/testtask'
 require 'rdoc/task'
@@ -31,6 +33,7 @@ task :ta => [:test_all]
 task :tu => [:test_units]
 
 Rake::TestTask.new("test_units") do |t|
+  t.libs << "lib" << "."
   t.test_files = FileList['test/test*.rb']
   t.verbose = false
 end

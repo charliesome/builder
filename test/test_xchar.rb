@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'builder/xchar'
 
-class TestXmlEscaping < Test::Unit::TestCase
+class TestXmlEscaping < MiniTest::Test
   def test_ascii
     assert_equal 'abc', 'abc'.to_xs
   end

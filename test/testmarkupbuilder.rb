@@ -10,12 +10,12 @@
 # above copyright notice is included.
 #++
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'test/preload'
 require 'builder'
 require 'builder/xmlmarkup'
 
-class TestMarkup < Test::Unit::TestCase
+class TestMarkup < MiniTest::Test
   def setup
     @xml = Builder::XmlMarkup.new
   end
@@ -78,7 +78,7 @@ class TestMarkup < Test::Unit::TestCase
     @xml.a("link", :href=>"http://onestepback.org")
     assert_equal %{<a href="http://onestepback.org">link</a>}, @xml.target!
   end
-  
+
   def test_complex
     @xml.body(:bg=>"#ffffff") { |x|
       x.title("T", :style=>"red")
@@ -108,15 +108,15 @@ class TestMarkup < Test::Unit::TestCase
   end
 
   def test_reference_methods
-    @xml.title { |x| x.a { x.b(name) } }
+    @xml.title { |x| x.a { x.b("bob") } }
     assert_equal "<title><a><b>bob</b></a></title>", @xml.target!
   end
 
   def test_append_text
     @xml.p { |x| x.br; x.text! "HI" }
-    assert_equal "<p><br/>HI</p>", @xml.target!    
+    assert_equal "<p><br/>HI</p>", @xml.target!
   end
-  
+
   def test_ambiguous_markup
     ex = assert_raises(ArgumentError) {
       @xml.h1("data1") { b }
@@ -150,13 +150,9 @@ class TestMarkup < Test::Unit::TestCase
     b.div { @xml.span { @xml.a("text", :href=>"ref") } }
     assert_equal "<div><span><a href=\"ref\">text</a></span></div>", @xml.target!
   end
-
-  def name
-    "bob"
-  end
 end
 
-class TestAttributeEscaping < Test::Unit::TestCase
+class TestAttributeEscaping < MiniTest::Test
 
   def setup
     @xml = Builder::XmlMarkup.new
@@ -194,7 +190,7 @@ class TestAttributeEscaping < Test::Unit::TestCase
 
 end
 
-class TestNameSpaces < Test::Unit::TestCase
+class TestNameSpaces < MiniTest::Test
   def setup
     @xml = Builder::XmlMarkup.new(:indent=>2)
   end
@@ -207,7 +203,7 @@ class TestNameSpaces < Test::Unit::TestCase
   def test_long
     xml = Builder::XmlMarkup.new(:indent=>2)
     xml.instruct!
-    xml.rdf :RDF, 
+    xml.rdf :RDF,
       "xmlns:rdf" => :"&rdf;",
       "xmlns:rdfs" => :"&rdfs;",
       "xmlns:xsd" => :"&xsd;",
@@ -227,10 +223,10 @@ class TestNameSpaces < Test::Unit::TestCase
     assert_match /xmlns:rdf="&rdf;"/m, xml.target!
     assert_match /<owl:Restriction>/m, xml.target!
   end
-  
+
 end
 
-class TestDeclarations < Test::Unit::TestCase
+class TestDeclarations < MiniTest::Test
   def setup
     @xml = Builder::XmlMarkup.new(:indent=>2)
   end
@@ -287,7 +283,7 @@ class TestDeclarations < Test::Unit::TestCase
 end
 
 
-class TestSpecialMarkup < Test::Unit::TestCase
+class TestSpecialMarkup < MiniTest::Test
   def setup
     @xml = Builder::XmlMarkup.new(:indent=>2)
   end
@@ -353,7 +349,7 @@ class TestSpecialMarkup < Test::Unit::TestCase
   end
 end
 
-class TestIndentedXmlMarkup < Test::Unit::TestCase
+class TestIndentedXmlMarkup < MiniTest::Test
   def setup
     @xml = Builder::XmlMarkup.new(:indent=>2)
   end
@@ -377,7 +373,7 @@ class TestIndentedXmlMarkup < Test::Unit::TestCase
     assert_equal "        <name>\n          <first>Jim</first>\n        </name>\n", @xml.target!
   end
 
-  class TestXmlEvents < Test::Unit::TestCase
+  class TestXmlEvents < MiniTest::Test
     def setup
       @handler = EventHandler.new
       @xe = Builder::XmlEvents.new(:target=>@handler)
@@ -430,7 +426,7 @@ class TestIndentedXmlMarkup < Test::Unit::TestCase
       def initialize
 	@events = []
       end
-      
+
       def start_tag(sym, attrs)
 	@events << [:start, sym, attrs]
       end
